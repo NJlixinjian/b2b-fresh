@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.sigo.sigocloudprovider.dao.spartan.RefundDao">
+
+    <resultMap type="cn.sigo.sigocloudprovider.model.Refund" id="BaseResultMap">
+        <result property="orderCode" column="order_code"/>
+        <result property="refundId" column="refund_id"/>
+        <result property="orderStatus" column="main_order_status"/>
+        <result property="refundStatus" column="refund_status"/>
+        <result property="refundCode" column="refund_code"/>
+    </resultMap>
+
+    <select id="queryRefundInfo" resultMap="BaseResultMap">
+        SELECT order_code,refund_id,main_order_status,refund_status,refund_code from t_refund
+        WHERE  order_code = #{orderCode}
+        ORDER BY create_time DESC
+        LIMIT 1
+    </select>
+
+    <select id="countRefundingByOrderCode" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(1) from  `t_refund` where refund_status not in (6,-2,8) and  order_code =  #{orderCode}
+    </select>
+</mapper>

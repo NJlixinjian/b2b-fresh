@@ -1,0 +1,68 @@
+eureka:
+  instance:
+    prefer-ip-address: true #以IP地址注册到服务中心
+    # 每间隔5s，向服务端发送一次心跳，证明自己依然”存活“
+    leaseRenewalIntervalInSeconds: 5
+    # 告诉服务端，如果我10s之内没有给你发心跳，就代表我“死”了，将我踢出掉。
+    leaseExpirationDurationInSeconds: 11
+  #开启健康检查（需要spring-boot-starter-actuator依赖）
+  client:
+    service-url:
+      defaultZone: http://localhost:8000/eureka/
+    healthcheck:
+      enabled: true
+
+spring:
+  application:
+    name: sigo-platform
+  jackson:
+    mapper:
+      # 忽略类型未小写
+      accept_case_insensitive_properties: true
+  main:
+    allow-bean-definition-overriding: true #当遇到同样名字的时候，是否允许覆盖注册
+  profiles:
+    active: dev
+  zipkin:
+    base-url: http://localhost:8010
+  sleuth:
+    sampler:
+      percentage:1.0
+
+  ### RabbitMQ
+  rabbitmq:
+    host: 10.0.140.14
+    port: 5672
+    username: guest
+    password: guest
+server:
+  port: ${randomServerPort.value[10018,10019]}
+
+
+### MyBatis配置
+#mybatis
+mybatis-plus:
+   mapper-locations: classpath:mapper/*.xml
+   #实体扫描，多个package用逗号或者分号分隔
+   type-aliases-package: cn.sigo.sigocloudprovider.model.entity.*
+
+### 配置pagehelper参数
+pagehelper:
+  helperDialect: mysql
+  reasonable: false
+  supportMethodsArguments: true
+  params: count=countSql
+
+#启用监控
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"  # 开放所有端点health，info，metrics，通过actuator/+端点名就可以获取相应的信息。默认打开health和info
+  endpoint:
+    health:
+      show-details: always  #未开启actuator/health时，我们获取到的信息是{"status":"UP"}，status的值还有可能是 DOWN。开启后打印详细信息
+    # 开启优雅关闭
+    shutdown:
+      enabled: true

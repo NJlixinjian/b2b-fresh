@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.sigo.sigocloudprovider.dao.order.OrderDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="cn.sigo.sigocloudprovider.model.Order" id="BaseMap">
+        <result property="orderId" column="id"/>
+        <result property="orderCode" column="order_code"/>
+        <result property="status" column="status"/>
+        <result property="buyerId" column="buyer_id"/>
+        <result property="sellerId" column="seller_id"/>
+        <result property="buyerName" column="buyer_name"/>
+        <result property="sellerName" column="seller_name"/>
+        <result property="consigneeName" column="consignee_name"/>
+        <result property="consigneePhone" column="consignee_phone"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="district" column="district"/>
+        <result property="street" column="street"/>
+        <result property="addressDetail" column="address_detail"/>
+        <result property="expectedDeliveryTime" column="expected_delivery_time"/>
+        <result property="payChannel" column="pay_channel"/>
+        <result property="payType" column="pay_type"/>
+        <result property="payCode" column="pay_code"/>
+        <result property="cod" column="cod"/>
+        <result property="orderPrice" column="order_price"/>
+        <result property="postage" column="postage"/>
+        <result property="totalCost" column="total_cost"/>
+        <result property="actualIncome" column="actual_income"/>
+        <result property="actualPrice" column="actual_price"/>
+        <result property="actualPay" column="actual_pay"/>
+        <result property="promoteDiscount" column="promote_discount"/>
+        <result property="activeDiscount" column="active_discount"/>
+        <result property="manualDiscount" column="manual_discount"/>
+        <result property="orderSource" column="order_source"/>
+        <result property="orderType" column="order_type"/>
+        <result property="urgeLevel" column="urge_level"/>
+        <result property="buyerRemark" column="buyer_remark"/>
+        <result property="sellerRemark" column="seller_remark"/>
+        <result property="exceptionDescription" column="exception_description"/>
+        <result property="payTime" column="pay_time"/>
+        <result property="sendTime" column="send_time"/>
+        <result property="lastTime" column="last_time"/>
+        <result property="cancelTime" column="cancel_time"/>
+        <result property="closeTime" column="close_time"/>
+        <result property="timeoutTime" column="timeout_time"/>
+        <result property="confirmTime" column="confirm_time"/>
+        <result property="groupId" column="group_id"/>
+        <result property="deliveryStatus" column="delivery_status"/>
+        <result property="payStatus" column="pay_status"/>
+        <result property="orderDevice" column="order_device"/>
+        <result property="orderDeviceIp" column="order_device_ip"/>
+        <result property="orderVersion" column="order_version"/>
+        <result property="shippingListWay" column="shipping_list_way"/>
+        <result property="remark" column="remark"/>
+        <result property="cancelCause" column="cancel_cause"/>
+        <result property="payAccount" column="pay_account"/>
+        <result property="sellerFlag" column="seller_flag"/>
+        <result property="linePayment" column="line_payment"/>
+        <result property="payDeviceIp" column="pay_device_ip"/>
+        <result property="linePaymentTime" column="line_payment_time"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="payer" column="payer"/>
+
+    </resultMap>
+
+    <select id="queryOrderDetail" resultMap="BaseMap">
+        SELECT
+          id,
+          order_code,-- 订单编号
+          `status`,-- 订单状态,
+
+          buyer_name,-- 采购商
+          seller_name,-- 供货商
+          buyer_remark,-- 留言
+          buyer_id,
+          seller_id,
+
+          consignee_name,-- 收货人
+          consignee_phone,-- 收货联系方式
+          -- 详细地址
+          province,
+          city,
+          district,
+          street,
+          address_detail,
+
+          expected_delivery_time,
+          pay_channel,
+
+          pay_type,-- 支付方式
+          pay_code,-- 支付流水
+          cod,
+          order_price,-- (商品总额)订单金额
+          postage,-- 运费
+          total_cost,
+          actual_income,-- 实收金额
+          actual_price,-- 实际应收金额
+          actual_pay,-- 实付(支付)金额
+          promote_discount,
+          active_discount,-- 优惠
+          manual_discount,-- 手工折扣金额(砍价)
+          order_source,
+          order_type,
+          urge_level,
+
+          seller_remark,
+          exception_description,
+          order_time,-- 下单时间
+--           date_format(order_time, '%Y-%m-%d %H:%i:%s' ) createDate,
+          pay_time,-- 付款时间
+          send_time,-- 发货时间
+          last_time,-- 最后修改时间
+          cancel_time,-- 取消时间
+          close_time,-- 关闭时间
+          timeout_time,
+          date_format(confirm_time, '%Y-%m-%d %H:%i:%s' ) confirm_time,
+          group_id,
+          pay_status,
+          delivery_status,
+          order_device,
+          order_device_ip,
+          order_version,
+          shipping_list_way,
+          remark,
+          cancel_cause,
+          pay_account,
+          seller_flag,
+          line_payment,
+          pay_device_ip,
+          line_payment_time,
+          payer
+        FROM
+          main_order
+        WHERE
+        `status` != 'history'
+        <if test="orderCode != null ">
+            AND order_code = #{orderCode}
+        </if>
+    </select>
+
+    <resultMap id="orderDetail" type="cn.sigo.sigocloudprovider.model.OrderDetail">
+        <result column="item_id" jdbcType="BIGINT" property="itemId" />
+        <result column="item_name" jdbcType="VARCHAR" property="itemName" />
+        <result column="item_img" jdbcType="VARCHAR" property="itemImg" />
+        <result column="item_category" jdbcType="VARCHAR" property="itemCategory" />
+        <result column="sku_data" jdbcType="VARCHAR" property="skuData" />
+        <result column="sku" jdbcType="BIGINT" property="sku" />
+        <result column="item_code" jdbcType="VARCHAR" property="itemCode" />
+        <result column="number" jdbcType="INTEGER" property="number" />
+        <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+        <result column="actual_price" jdbcType="DECIMAL" property="actualPrice" />
+        <result column="express_num"  property="expressNum" jdbcType="VARCHAR"/>
+        <result column="status"  property="detailStatus" jdbcType="VARCHAR"/>
+        <result column="express_company"  property="expressCompany" jdbcType="VARCHAR"/>
+        <result column="subtotal"  property="subtotal" jdbcType="DECIMAL"/>
+        <result column="send_time" property="detailSendTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="queryProductDetail" resultMap="orderDetail">
+       SELECT
+	    item_id,-- 商品id
+	    item_name,-- 商品名称
+	    item_img,-- 商品图片
+	    item_category,-- 类目名称
+	    sku_data,-- sku属性
+	    sku,-- skuid
+	    item_code, -- 商品code
+	    `number`,-- 数量
+	    `status`,-- 数量
+	    unit_price,-- 交易单价
+	    actual_price, -- 实收金额
+	    express_num,-- 快递单号
+	    express_company, -- 快递公司
+	    send_time,
+	    (unit_price * number) subtotal-- 小计
+      FROM
+	    order_detail
+	  WHERE order_code = #{orderCode} and status != 'history'
+    </select>
+
+    <!--根据快递单号查询-->
+    <select id="queryInfoByExpressNum" resultMap="orderDetail">
+        SELECT
+        item_id,-- 商品id
+        item_name,-- 商品名称
+        item_img,-- 商品图片
+        item_category,-- 类目名称
+        sku_data,-- sku属性
+        sku,-- skuid
+        item_code, -- 商品code
+        number,-- 数量
+        unit_price,-- 交易单价
+        actual_price, -- 实收金额
+        express_num, -- 快递单号
+        express_company, -- 快递公司
+        send_time
+        FROM
+        order_detail
+        WHERE order_code = #{orderCode} and express_num = #{expressNum} and status != 'history'
+    </select>
+
+    <select id="querySendSome" resultMap="orderDetail">
+        SELECT
+	      *, ABS(NOW() - send_time) AS send_time
+        FROM
+	      order_detail
+        WHERE status = 'sending' AND order_code = #{orderCode}
+        ORDER BY
+	      send_time ASC
+          LIMIT 0,1
+    </select>
+</mapper>

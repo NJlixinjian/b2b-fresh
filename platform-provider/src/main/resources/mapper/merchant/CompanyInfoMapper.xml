@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sigo.sigocloudprovider.dao.merchant.CompanyInfoDao">
+    <resultMap id="BaseResultMap" type="cn.sigo.sigocloudprovider.model.CompanyInfo">
+        <id column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="company_code" jdbcType="VARCHAR" property="companyCode"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="enterprise_id" jdbcType="BIGINT" property="enterpriseId"/>
+        <result column="company_name" jdbcType="VARCHAR" property="companyName"/>
+        <result column="system" jdbcType="TINYINT" property="system"/>
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode"/>
+        <result column="province" jdbcType="VARCHAR" property="province"/>
+        <result column="province_desc" jdbcType="VARCHAR" property="provinceDesc"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="city_desc" jdbcType="VARCHAR" property="cityDesc"/>
+        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="area_desc" jdbcType="VARCHAR" property="areaDesc"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="corporation_card" jdbcType="CHAR" property="corporationCard"/>
+        <result column="corporation_name" jdbcType="VARCHAR" property="corporationName"/>
+        <result column="corporation_b_url" jdbcType="VARCHAR" property="corporationBUrl"/>
+        <result column="corporation_f_url" jdbcType="VARCHAR" property="corporationFUrl"/>
+        <result column="business_num" jdbcType="VARCHAR" property="businessNum"/>
+        <result column="business_url" jdbcType="VARCHAR" property="businessUrl"/>
+        <result column="medical_num" jdbcType="VARCHAR" property="medicalNum"/>
+        <result column="medical_url" jdbcType="VARCHAR" property="medicalUrl"/>
+        <result column="is_self" jdbcType="TINYINT" property="isSelf"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="company_head_url" jdbcType="VARCHAR" property="companyHeadUrl"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="version_number" jdbcType="TIMESTAMP" property="versionNumber"/>
+        <result column="medical_flag" jdbcType="TINYINT" property="medicalFlag"/>
+        <result column="medical_status" jdbcType="TINYINT" property="medicalStatus"/>
+        <result column="supply_flag" jdbcType="TINYINT" property="supplyFlag"/>
+        <result column="supply_status" jdbcType="TINYINT" property="supplyStatus"/>
+        <result column="purchase_aptitude_flag" jdbcType="TINYINT" property="purchaseAptitudeFlag"/>
+        <result column="supplier_aptitude_flag" jdbcType="TINYINT" property="supplierAptitudeFlag"/>
+        <result column="store_desc" jdbcType="VARCHAR" property="storeDesc"/>
+        <result column="store_name" jdbcType="VARCHAR" property="storeName"/>
+        <result column="store_phone" jdbcType="CHAR" property="storePhone"/>
+        <result column="store_tel" jdbcType="VARCHAR" property="storeTel"/>
+        <result column="paymsg_phone" jdbcType="VARCHAR" property="paymsgPhone"/>
+        <result column="default_margin" jdbcType="DECIMAL" property="defaultMargin"/>
+        <result column="doorhead_photo" jdbcType="VARCHAR" property="doorheadPhoto"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="contacts_phone" jdbcType="VARCHAR" property="contactsPhone"/>
+        <result column="contacts" jdbcType="VARCHAR" property="contacts"/>
+        <result column="check_status" jdbcType="TINYINT" property="checkStatus"/>
+        <result column="paymsg_phone" jdbcType="VARCHAR" property="paymsgPhone"/>
+
+    </resultMap>
+    <sql id="Base_Column_List">
+    cart_id, account_id, company_id,company_name, sku_id, product_id,product_code, product_name, price, `count`,
+    seller_account_id, seller_company_id, seller_company_name, app_code, is_custom, sku_eye,
+    sku_sph, sku_cyl, sku_axis, sku_add, sku_six, disabled, version_number, adder, add_time,
+    moder, mod_time
+    </sql>
+
+    <!--查询商户信息-->
+    <select id="queryCompanyInfo" resultMap="BaseResultMap">
+        SELECT
+          company_name,
+          contacts_phone,
+          paymsg_phone,
+          province_desc,
+          city_desc
+        FROM
+          t_company_info
+        WHERE
+          company_id = #{companyId}
+    </select>
+
+    <!--开启/关闭账号-->
+    <update id="updateAccount" parameterType="cn.sigo.sigocloudprovider.model.CompanyInfo">
+        update t_company_info
+        <set>
+            <if test="checkStatus != null">
+                check_status = #{checkStatus,jdbcType=TINYINT},
+            </if>
+        </set>
+        where company_id = #{companyId,jdbcType=BIGINT}
+    </update>
+</mapper>
